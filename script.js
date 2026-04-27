@@ -7,6 +7,7 @@ const exportButton = document.querySelector("#exportButton");
 const resultPanel = document.querySelector("#resultPanel");
 const resultImage = document.querySelector("#resultImage");
 const saveButton = document.querySelector("#saveButton");
+const saveTip = document.querySelector("#saveTip");
 const downloadLink = document.querySelector("#downloadLink");
 
 const frame = new Image();
@@ -26,6 +27,11 @@ let imageState = {
 const pointers = new Map();
 let dragStart = null;
 let pinchStart = null;
+
+function isAndroidWeChat() {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.includes("micromessenger") && ua.includes("android");
+}
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -139,6 +145,7 @@ exportButton.addEventListener("click", () => {
   const dataUrl = canvas.toDataURL("image/png");
   resultImage.src = dataUrl;
   downloadLink.href = dataUrl;
+  saveTip.hidden = true;
   resultPanel.hidden = false;
 });
 
@@ -150,6 +157,12 @@ saveButton.addEventListener("click", async () => {
 
   const file = new File([resultBlob], "maiya-avatar.png", { type: "image/png" });
   if (await shareImage(file)) return;
+
+  if (isAndroidWeChat()) {
+    saveTip.hidden = false;
+    resultImage.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
 
   triggerDownload(resultBlob);
 });

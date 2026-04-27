@@ -147,6 +147,8 @@ button:disabled,
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
+  -webkit-touch-callout: default;
+  user-select: auto;
 }
 
 #downloadLink {
@@ -157,4 +159,16 @@ button:disabled,
 #saveButton {
   color: #fff;
   background: #1f7f75;
+}
+
+.save-tip {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
 }
