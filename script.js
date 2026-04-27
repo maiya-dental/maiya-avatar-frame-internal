@@ -90,6 +90,24 @@ function triggerDownload(blob) {
   downloadLink.click();
 }
 
+async function shareImage(file) {
+  if (!navigator.share) return false;
+  const payload = {
+    files: [file],
+    title: "麦芽口腔头像",
+  };
+
+  if (navigator.canShare && !navigator.canShare(payload)) return false;
+
+  try {
+    await navigator.share(payload);
+    return true;
+  } catch (error) {
+    if (error && error.name === "AbortError") return true;
+    return false;
+  }
+}
+
 photoInput.addEventListener("change", () => {
   const file = photoInput.files && photoInput.files[0];
   if (!file) return;
@@ -131,17 +149,7 @@ saveButton.addEventListener("click", async () => {
   if (!resultBlob) return;
 
   const file = new File([resultBlob], "maiya-avatar.png", { type: "image/png" });
-  if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-    try {
-      await navigator.share({
-        files: [file],
-        title: "麦芽口腔头像",
-      });
-      return;
-    } catch (error) {
-      if (error && error.name === "AbortError") return;
-    }
-  }
+  if (await shareImage(file)) return;
 
   triggerDownload(resultBlob);
 });
