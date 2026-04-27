@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>麦芽口腔头像生成</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="editor" aria-label="头像编辑器">
+        <div class="stage-wrap">
+          <canvas id="stage" width="800" height="800" aria-label="头像预览"></canvas>
+        </div>
+
+        <div class="controls">
+          <label class="file-button">
+            <input id="photoInput" type="file" accept="image/*" />
+            <span>选择照片</span>
+          </label>
+
+          <label class="zoom">
+            <span>缩放</span>
+            <input id="zoomRange" type="range" min="0.35" max="3" step="0.01" value="1" disabled />
+          </label>
+
+          <div class="actions">
+            <button id="resetButton" type="button" disabled>重置</button>
+            <button id="exportButton" type="button" disabled>生成头像</button>
+          </div>
+        </div>
+
+        <div id="resultPanel" class="result-panel" hidden>
+          <img id="resultImage" alt="生成后的头像" />
+          <a id="downloadLink" download="maiya-avatar.png">保存图片</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
