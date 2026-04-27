@@ -145,7 +145,6 @@ exportButton.addEventListener("click", () => {
   const dataUrl = canvas.toDataURL("image/png");
   resultImage.src = dataUrl;
   downloadLink.href = dataUrl;
-  saveTip.hidden = true;
   resultPanel.hidden = false;
 });
 
@@ -159,7 +158,6 @@ saveButton.addEventListener("click", async () => {
   if (await shareImage(file)) return;
 
   if (isAndroidWeChat()) {
-    saveTip.hidden = false;
     resultImage.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
