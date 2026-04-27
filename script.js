@@ -6,6 +6,7 @@ const resetButton = document.querySelector("#resetButton");
 const exportButton = document.querySelector("#exportButton");
 const resultPanel = document.querySelector("#resultPanel");
 const resultImage = document.querySelector("#resultImage");
+const saveButton = document.querySelector("#saveButton");
 const downloadLink = document.querySelector("#downloadLink");
 
 const frame = new Image();
@@ -13,6 +14,8 @@ frame.src = "./frame.png";
 
 let photo = null;
 let photoUrl = "";
+let resultBlob = null;
+let resultObjectUrl = "";
 let imageState = {
   x: 0,
   y: 0,
@@ -74,6 +77,19 @@ function clampScale(value) {
   return Math.min(3, Math.max(0.35, value));
 }
 
+function canvasToPngBlob() {
+  return new Promise((resolve) => {
+    canvas.toBlob(resolve, "image/png");
+  });
+}
+
+function triggerDownload(blob) {
+  if (resultObjectUrl) URL.revokeObjectURL(resultObjectUrl);
+  resultObjectUrl = URL.createObjectURL(blob);
+  downloadLink.href = resultObjectUrl;
+  downloadLink.click();
+}
+
 photoInput.addEventListener("change", () => {
   const file = photoInput.files && photoInput.files[0];
   if (!file) return;
@@ -106,6 +122,28 @@ exportButton.addEventListener("click", () => {
   resultImage.src = dataUrl;
   downloadLink.href = dataUrl;
   resultPanel.hidden = false;
+});
+
+saveButton.addEventListener("click", async () => {
+  if (!photo) return;
+  draw();
+  resultBlob = await canvasToPngBlob();
+  if (!resultBlob) return;
+
+  const file = new File([resultBlob], "maiya-avatar.png", { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+    try {
+      await navigator.share({
+        files: [file],
+        title: "麦芽口腔头像",
+      });
+      return;
+    } catch (error) {
+      if (error && error.name === "AbortError") return;
+    }
+  }
+
+  triggerDownload(resultBlob);
 });
 
 canvas.addEventListener("pointerdown", (event) => {

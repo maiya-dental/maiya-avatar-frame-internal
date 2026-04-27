@@ -153,3 +153,8 @@ button:disabled,
   color: #fff;
   background: #1f7f75;
 }
+
+#saveButton {
+  color: #fff;
+  background: #1f7f75;
+}
